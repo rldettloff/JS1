@@ -1,0 +1,160 @@
+<html>
+
+<head>
+</head>
+<style>
+    .over {
+        background-color: orange;
+    }
+
+    .selected {
+        background-color: green;
+    }
+
+    thead > tr {
+        background-color: gray;
+    }
+
+    tr:nth-child(even) {
+        background-color: lightgray;
+    }
+</style>
+
+<body>
+    <div id="buttons"></div>
+    <table id="table" border='1'>
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>role</th>
+                <th>house</th>
+                <th>gender</th>
+                <th>alignment</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+    </table>
+    <button id="reset">reset</button>
+</body>
+
+<script>
+    // list of characters
+    const characters = [
+        { name: "Albus Dumbledore", role: "staff", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Nymphadora Tonks", role: "", house: "Hufflepuff", gender: "f", alignment: "good" },
+        { name: "Ron Weasley", role: "student", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Ginny Weasley", role: "student", house: "Gryffindor", gender: "f", alignment: "good" },
+        { name: "Hermione Granger", role: "student", house: "Gryffindor", gender: "f", alignment: "good" },
+        { name: "Mad-eye Moody", role: "staff", house: "", gender: "m", alignment: "good" },
+        { name: "Prof McGonagall", role: "staff", house: "Gryffindor", gender: "f", alignment: "good" },
+        { name: "Harry Potter", role: "student", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Draco Malfoy", role: "student", house: "Slytherin", gender: "m", alignment: "evil" },
+        { name: "Hagrid", role: "staff", house: "Gryffindor", gender: "m", alignment: "good" },
+        { name: "Luna Lovegood", role: "student", house: "Ravenclaw", gender: "f", alignment: "good" },
+        { name: "Voldemort", role: "", house: "Slytherin", gender: "m", alignment: "evil" },
+        { name: "Bellatrix Lestrange", role: "", house: "Slytherin", gender: "f", alignment: "evil" },
+        { name: "Severus Snape", role: "staff", house: "Slytherin", gender: "m", alignment: "?" }
+    ];
+
+    const removeAllTableBodyRows = function () {
+        const tbodyElem = document.getElementById("tbody");
+        tbodyElem.innerHTML = "";
+    }
+
+    const filterByHouse = function (house) {
+        removeAllTableBodyRows();
+        const tbodyElem = document.getElementById("tbody");
+        for (const character of characters) {
+            let shouldIncludeCurrentCharacter = false;
+            const tableRow = document.createElement("tr");
+
+            for (const [characterKey, characterValue] of Object.entries(character)) {
+                if (characterKey === "house" && characterValue === house) {
+                    shouldIncludeCurrentCharacter = true;
+                }
+
+                const tableCell = document.createElement("td");
+                const cellText = document.createTextNode(characterValue);
+                tableCell.appendChild(cellText);
+                tableRow.appendChild(tableCell);
+            }
+
+            if (shouldIncludeCurrentCharacter) {
+                tbodyElem.appendChild(tableRow);
+            }
+        }
+    }
+    
+
+    const generateTableRows = function (characters) {
+        const tbodyElem = document.getElementById("tbody");
+        for (const character of characters) {
+            const tableRow = document.createElement("tr");
+
+            for (const [characterKey, characterValue] of Object.entries(character)) {
+                const tableCell = document.createElement("td");
+                const cellText = document.createTextNode(characterValue);
+                tableCell.appendChild(cellText);
+                tableRow.appendChild(tableCell);
+            }
+            tbodyElem.appendChild(tableRow);
+        }
+    }
+
+    const resetEventHandler = function (characters) {
+        removeAllTableBodyRows();
+        generateTableRows(characters);
+    }
+
+    const addResetEvent = function (characters) {
+        resetButtonElem = document.getElementById("reset");
+        resetButtonElem.addEventListener("click", function() {
+            resetEventHandler(characters);
+    });
+    }
+
+    const getUniqueHousesSet = function (characters) {
+        // The Set objects lets you store unique values of any type.
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+        const houseSet = new Set();
+
+        // loop through a characters list and add house properties value
+        for (const character of characters) {
+            if (character["house"].trim().length === 0) {
+                // if house value is filled with white spaces or an empty string, we ignore
+                continue
+            }
+            houseSet.add(character["house"]);
+        }
+        return houseSet;
+    }
+
+
+
+    const addButtonsForEachHouse = function (uniqueHousesSet, buttonsParentElem) {
+        uniqueHousesSet.forEach((house) => {
+            // create a button element to append as a child to parent div element
+            const buttonElem = document.createElement("button");
+            // set button's id as house name
+            buttonElem.setAttribute("id", house);
+            buttonElem.innerText = house;
+            buttonElem.addEventListener("click", function () { 
+                filterByHouse(house)
+            });
+            buttonsParentElem.appendChild(buttonElem);
+        });
+    }
+    
+
+    const uniqueHousesSet = getUniqueHousesSet(characters);
+    const buttonsParentElem = document.getElementById("buttons");
+
+    addButtonsForEachHouse(uniqueHousesSet, buttonsParentElem);
+    generateTableRows(characters);
+    addResetEvent(characters);
+
+</script>
+
+</html>

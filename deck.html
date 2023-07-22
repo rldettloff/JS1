@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<Body>
+<h2>RoboDealer</h2>
+<button onclick="dealHand();">Deal Hand</button>
+
+<hr><div id="card_hand"></div>
+
+<script>
+const suits = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
+const face_values = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
+
+const deck = [];
+
+for (const suit of suits) {
+    for (const face_value of face_values) {
+        const card = {
+            suit: suit,
+            face_value: face_value
+        }
+        deck.push(card)
+    }
+}
+
+
+function getRandomDeckIndex() {
+   return Math.floor(Math.random() * 52);
+}
+
+function getRandomCard(deck) {
+    const index = getRandomDeckIndex()
+    return deck[index]
+}
+
+function displayCard(card) {
+    console.log(`${card.face_value} of ${card.suit}`);
+
+}
+console.log(deck);
+displayCard(getRandomCard(deck));
+displayCard(getRandomCard(deck));
+displayCard(getRandomCard(deck));
+displayCard(getRandomCard(deck));
+displayCard(getRandomCard(deck));
+  
+
+  $("#card_hand").html("Button clicked");
+
+  </script>
+</body>
+
+</html>
